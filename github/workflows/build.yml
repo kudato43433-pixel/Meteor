@@ -1,0 +1,49 @@
+name: Build Meteor Fall
+
+on:
+
+  workflow_dispatch:
+
+  push:
+
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 17
+
+        uses: actions/setup-java@v4
+
+        with:
+
+          distribution: temurin
+
+          java-version: '17'
+
+      - name: Extract project
+
+        run: unzip meteorfall-1.19.2-project.zip
+
+      - name: Build mod
+
+        working-directory: meteor-mod-1.19.2
+
+        run: chmod +x gradlew && ./gradlew build
+
+      - name: Upload JAR
+
+        uses: actions/upload-artifact@v4
+
+        with:
+
+          name: meteorfall-jar
+
+          path: meteor-mod-1.19.2/build/libs/*.jar
